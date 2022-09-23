@@ -2,6 +2,9 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js App" />
+    <button class="btn btn-success text-white" @click="hello()">
+      Testing Daisy
+    </button>
   </div>
 </template>
 
@@ -13,6 +16,11 @@ export default {
   name: "HomeView",
   components: {
     HelloWorld,
+  },
+  methods: {
+    hello() {
+      alert("Hello World");
+    },
   },
 };
 </script>
