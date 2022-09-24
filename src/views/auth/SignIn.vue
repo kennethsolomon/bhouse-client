@@ -2,10 +2,10 @@
 <section class="h-screen">
   <div class="container px-6 py-12 h-full">
     <div class="flex justify-center items-center flex-wrap h-full g-6 text-gray-800">
-      <div class="md:w-8/12 lg:w-6/12 mb-12 md:mb-0">
+      <div class="flex justify-center md:w-8/12 lg:w-6/12 mb-12 md:mb-5 md:mr-0 mr-5">
         <img
-          src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
-          class="w-full"
+          src="https://png.pngitem.com/pimgs/s/462-4629995_rent-clipart-indian-house-hd-png-download.png"
+          class="rounded-3xl w-full lg:3/5"
           alt="Phone image"
         />
       </div>
