@@ -1,14 +1,14 @@
 <template>
 <!-- MODAL -->
-	<div class="flex w-full justify-end">
+	<div class="flex w-full justify-end text-end">
 		<!-- The button to open modal -->
-		<label for="boarder-modal" class="btn modal-button m-2">add boarder</label>
+  <button @click="showModal()" class="btn modal-button m-2 mx-10 hidden md:block">add boarder</button>
 		<!-- Put this part before </body> tag -->
 		<input type="checkbox" id="boarder-modal" class="modal-toggle" />
       <div class="modal">
         <div class="modal-box relative">
           <label @click="reset()" for="boarder-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-          <h3 class="text-lg font-bold my-2">ADD BOARDER</h3>
+          <h3 class="text-lg font-bold my-2 text-start">ADD BOARDER</h3>
           <div v-if="form.state == State.Error" class="alert alert-error shadow-lg mb-4">
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -39,56 +39,84 @@
         </div>
       </div>
 	</div>
+<!-- CARD -->
+  <div class="flex flex-col space-y-3 justify-center w-full block md:hidden">
+    <div
+      v-for="( boarder, index ) in table.boarders" :key="index"
+      @click="edit(boarder)"
+      class="shadow-lg rounded-2xl w-full p-4 bg-gray-800 relative overflow-hidden">
+        <div  class="w-full">
+            <p class="text-white text-lg font-medium mb-2">
+              {{`Name: ${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}
+            </p>
+            <p class="text-gray-300 text-sm">
+              {{`Address: ${boarder.get('address')}`}}
+            </p>
+            <p class="text-gray-300 text-sm">
+              {{`Contact Number: ${boarder.get('contact_number')}`}}
+            </p>
+            <p class="text-gray-300 text-sm">
+              {{`Office: ${boarder.get('office')}`}}
+            </p>
+            <p class="text-gray-300 text-sm">
+              {{`Incase of Emergency: ${boarder.get('incase_of_emergency')}`}}
+            </p>
+            <p class="text-gray-300 text-sm">
+              {{`Room Number: ${boarder.get('roomPointer').get('room_number')}`}}
+            </p>
+            <button class="btn bg-indigo-500 text-white btn-sm my-2" @click.stop="testing()">Add Payment</button>
+        </div>
+    </div>
+
+    <label for="boarder-modal" class="btn btn-circle modal-button m-2 fixed bottom-5 right-5 text-blue-500 h-31 w-31 text-2xl">+</label>
+  </div>
 
 <!-- TABLE -->
+  <div class="flex justify-center overflow-x-auto w-full">
+    <table class="invisible md:visible table w-full px-10 mx-10">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Address</th>
+          <th>Contact Number</th>
+          <th>Office</th>
+          <th>Incase of Emergency</th>
+          <th>Room Number</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        <tr class="hover" v-for="( boarder, index ) in table.boarders" :key="index">
+          <td>{{`${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}</td>
+          <td>{{`${boarder.get('address')}`}}</td>
+          <td>{{`${boarder.get('contact_number')}`}}</td>
+          <td>{{`${boarder.get('office')}`}}</td>
+          <td>{{`${boarder.get('incase_of_emergency')}`}}</td>
+          <td>{{`Room ${boarder.get('roomPointer').get('room_number')}`}}</td>
+          <th>
+            <div class="flex space-x-3">
+              <button class="btn btn-primary btn-md">Add Payment</button>
+              <button class="btn btn-primary btn-md" @click="edit(boarder)">Edit</button>
+            </div>
+          </th>
+        </tr>
+      </tbody>
+      <!-- foot -->
+      <tfoot>
+        <tr>
+          <th>Full Name</th>
+          <th>Address</th>
+          <th>Contact Number</th>
+          <th>Office</th>
+          <th>Incase of Emergency</th>
+          <th>Room Number</th>
+          <th>Action</th>
+        </tr>
+      </tfoot>
 
-  <div class="flex justify-center">
-    <div class="overflow-x-auto w-full md:w-5/6">
-      <table class="table w-full">
-        <!-- head -->
-        <thead>
-          <tr>
-            <th>Full Name</th>
-            <th>Address</th>
-            <th>Contact Number</th>
-            <th>Office</th>
-            <th>Incase of Emergency</th>
-            <th>Room Number</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- row 1 -->
-          <tr class="hover" v-for="( boarder, index ) in table.boarders" :key="index">
-            <td>{{`${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}</td>
-            <td>{{`${boarder.get('address')}`}}</td>
-            <td>{{`${boarder.get('contact_number')}`}}</td>
-            <td>{{`${boarder.get('office')}`}}</td>
-            <td>{{`${boarder.get('incase_of_emergency')}`}}</td>
-            <td>{{`Room ${boarder.get('roomPointer').get('room_number')}`}}</td>
-            <th>
-              <div class="flex space-x-3">
-                <button class="btn btn-primary btn-md">Add Payment</button>
-                <button class="btn btn-primary btn-md" @click="edit(boarder)">Edit</button>
-              </div>
-            </th>
-          </tr>
-        </tbody>
-        <!-- foot -->
-        <tfoot>
-          <tr>
-            <th>Full Name</th>
-            <th>Address</th>
-            <th>Contact Number</th>
-            <th>Office</th>
-            <th>Incase of Emergency</th>
-            <th>Room Number</th>
-            <th>Action</th>
-          </tr>
-        </tfoot>
-
-      </table>
-    </div>
+    </table>
   </div>
 </template>
 
@@ -121,6 +149,12 @@ export default {
     }
   }),
   methods: {
+    showModal() {
+      $('boarder-modal').checked = !$('boarder-modal').checked
+    },
+    testing() {
+      alert('testing')
+    },
     edit(boarder) {
       this.form.state=State.Initial
 
