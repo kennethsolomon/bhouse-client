@@ -1,11 +1,17 @@
+import Parse from 'parse'
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import { authGuard } from '@/helpers/AuthGuard.js'
+
+import Dashboard from "../views/HomeView.vue";
+import SignIn from '../views/auth/SignIn.vue'
+import NotFound from '../views/error/NotFound.vue'
 
 const routes = [
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
+    path: '/',
+    name: 'Dashboard',
+    component: Dashboard,
+    beforeEnter: authGuard
   },
   {
     path: "/about",
@@ -15,6 +21,17 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+  },
+  {
+    path: '/auth/signin',
+    name: 'Sign In',
+    component: SignIn,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: '404',
+    component: NotFound,
+    // component: () => import('../views/error/NotFound.vue')
   },
 ];
 

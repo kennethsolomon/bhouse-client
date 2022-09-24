@@ -1,8 +1,4 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
   <router-view />
 </template>
 
@@ -26,33 +22,33 @@ export default {
   data: () => ({
     user: null
   }),
-  mounted() {
-    console.log('current user', user.list())
+  computed: {
+    userChanged () {
+      return this.$store.state.userChanged
+    }
+  },
+  watch: {
+    userChanged (newValue) {
+      if(newValue){
+        this.$store.commit('userUpdated')
+        this.user = user.current()
+        this.role = this.user?.get('type')
+      }
+    }
+  },
+  mounted () {
+    this.user = user.current()
+    if (this.user != null) {
+      this.$store.commit('signIn')
+    } else {
+      this.$store.commit('signOut')
+    }
+    this.role = this.user?.get('type')
+    window.addEventListener("offline", function () {
+      this.$store.commit('offline', true)
+    }.bind(this))
   }
 
 }
 
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
