@@ -13,7 +13,7 @@ var user = {
   login (args = {}) {
     const { email, pass } = args
     if(!pass) throw {message: 'Password is required'}
-    if(!email) throw {message: 'Email is required'}
+    if(!email) throw {message: 'Username is required'}
 
     return Parse.User.logIn(email, pass)
   },
@@ -31,6 +31,7 @@ var user = {
     return q.get(id)
   },
   getRole: async function () {
+    console.log('getting role')
     const currentUser = Parse.User.current()
     const q = await new Parse.Query(Parse.Role).equalTo('users', currentUser).first()
     return q

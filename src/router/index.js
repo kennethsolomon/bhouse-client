@@ -2,7 +2,7 @@ import Parse from 'parse'
 import { createRouter, createWebHistory } from "vue-router";
 import { authGuard } from '@/helpers/AuthGuard.js'
 
-import Dashboard from "../views/HomeView.vue";
+import Dashboard from "../views/dashboard/Dashboard.vue";
 import SignIn from '../views/auth/SignIn.vue'
 import NotFound from '../views/error/NotFound.vue'
 
@@ -12,6 +12,13 @@ const routes = [
     name: 'Dashboard',
     component: Dashboard,
     beforeEnter: authGuard
+  },
+  {
+    path: '/boarder',
+    name: 'Boarder',
+    components: {
+      admin: () => import('../views/boarder/index.vue'),
+    }
   },
   {
     path: "/about",

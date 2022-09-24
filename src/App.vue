@@ -1,5 +1,35 @@
 <template>
-  <router-view />
+<div :class="{'drawer':sidebar}">
+  <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content flex flex-col">
+    <!-- Navbar -->
+    <div class="bg-base-300" :class="{'navbar':sidebar}">
+      <div class="flex-none lg:hidden" :class="{'hidden':!sidebar}">
+        <label for="my-drawer-3" class="btn btn-square btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </label>
+      </div>
+      <div class="flex-1 px-2 mx-2" :class="{'hidden':!sidebar}"><strong> <router-link to="/">Solomon's Boarding House</router-link></strong></div>
+      <div class="flex-none hidden lg:block">
+        <ul class="menu menu-horizontal" :class="{'hidden':!sidebar}">
+          <!-- Navbar menu content here -->
+        <li class="cursor-pointer"><router-link to="/boarder">Boader</router-link></li>
+        <li class="cursor-pointer"><span @click="signOut()">Logout</span></li>
+        </ul>
+      </div>
+    </div>
+      <router-view />
+      <router-view v-if="role" :name="role"/>
+  </div>
+  <div v-if="sidebar" class="drawer-side">
+    <label for="my-drawer-3" class="drawer-overlay"></label>
+    <ul class="menu p-4 overflow-y-auto w-80 bg-base-100">
+      <!-- Sidebar content here -->
+        <li class="cursor-pointer"><router-link to="/boarder">Boader</router-link></li>
+        <li class="cursor-pointer"><span @click="signOut()">Logout</span></li>
+    </ul>
+  </div>
+</div>
 </template>
 
 <script>
@@ -20,7 +50,9 @@ import { user, ErrorHandler } from '@/parse/user'
 
 export default {
   data: () => ({
-    user: null
+    user: null,
+    sidebar: false,
+    role: null
   }),
   computed: {
     userChanged () {
@@ -32,18 +64,38 @@ export default {
       if(newValue){
         this.$store.commit('userUpdated')
         this.user = user.current()
-        this.role = this.user?.get('type')
+        user.getRole().then((result) => {
+          this.role = result.get('name')
+        })
       }
+    },
+    user (newValue) {
+      if(newValue !== null){
+        console.log(newValue)
+        this.sidebar = true
+      } else {
+        this.sidebar = false
+      }
+    }
+  },
+  methods: {
+    signOut() {
+      Parse.User.logOut()
+      this.$store.commit('signOut')
+      this.$store.commit('userChanged')
+      this.$router.push({ name: 'Sign In' })
     }
   },
   mounted () {
     this.user = user.current()
-    if (this.user != null) {
+    if (this.user !== null) {
       this.$store.commit('signIn')
     } else {
       this.$store.commit('signOut')
     }
-    this.role = this.user?.get('type')
+    user.getRole().then((result) => {
+      this.role = result.get('name')
+    })
     window.addEventListener("offline", function () {
       this.$store.commit('offline', true)
     }.bind(this))
