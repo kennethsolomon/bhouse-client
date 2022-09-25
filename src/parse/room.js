@@ -15,6 +15,10 @@ var room = {
     const query = new Parse.Query(Room);
     return query.find()
   },
+  get: function (id) {
+    const query = new Parse.Query(Room);
+    return query.get(id)
+  },
   pointer: function (id) {
     const object = new Room()
     object.id = id

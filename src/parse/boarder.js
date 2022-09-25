@@ -4,14 +4,30 @@ const Boarder = Parse.Object.extend('boarder')
 const Room = Parse.Object.extend('room')
 
 var boarder = {
-//   cloud: {
-//     list: (args = {}) => {
-//       return new Parse.Cloud.run('travelAuthorities', args)
-//     },
-//     get: (id) => {
-//       return new Parse.Cloud.run('travelAuthorities', {id:id, keyword:''})
-//     },
-//   },
+  cloud: {
+    countRoom: () => {
+      return new Parse.Cloud.run('countRoom')
+    },
+    list: (args = {}) => {
+      return new Parse.Cloud.run('travelAuthorities', args)
+    },
+    get: (id) => {
+      return new Parse.Cloud.run('travelAuthorities', {id:id, keyword:''})
+    },
+  },
+
+  vacantStatus: function () {
+    const query = new Parse.Query(Boarder);
+    query.equalTo('status', 'active')
+    query.include('roomPointer')
+    // query.count()
+    const count = query.count()
+    console.log(count, 'counting')
+    query.find().then((result) => {
+      console.log('boarderjs', result)
+    })
+
+  },
 
   list: function () {
     const query = new Parse.Query(Boarder);

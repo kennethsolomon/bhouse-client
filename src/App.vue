@@ -13,6 +13,7 @@
       <div class="flex-none hidden lg:block">
         <ul class="menu menu-horizontal" :class="{'hidden':!sidebar}">
           <!-- Navbar menu content here -->
+        <li class="cursor-pointer"><router-link to="/">Dashboard</router-link></li>
         <li class="cursor-pointer"><router-link to="/boarder">Boader</router-link></li>
         <li class="cursor-pointer"><span @click="signOut()">Logout</span></li>
         </ul>
@@ -23,11 +24,17 @@
   </div>
   <div v-if="sidebar" class="drawer-side">
     <label for="my-drawer-3" class="drawer-overlay"></label>
-    <ul class="menu p-4 overflow-y-auto w-80 bg-base-100">
+    <ul class="flex flex-col h-full p-3 place-content-between menu overflow-y-auto w-80 bg-base-100">
       <!-- Sidebar content here -->
-        <li class="cursor-pointer"><router-link to="/boarder">Boader</router-link></li>
-        <li class="cursor-pointer"><span @click="signOut()">Logout</span></li>
+      <div class="flex flex-col w-full justify-center">
+        <li class="cursor-pointer w-full"><router-link class="justify-center" to="/">Dashboard</router-link></li>
+        <li class="cursor-pointer w-full"><router-link class="justify-center" to="/boarder">Boader</router-link></li>
+      </div>
+      <div class="flex justify-center">
+        <li class="cursor-pointer w-full"><span class="justify-center" @click="signOut()">Logout</span></li>
+      </div>
     </ul>
+
   </div>
 </div>
 </template>
