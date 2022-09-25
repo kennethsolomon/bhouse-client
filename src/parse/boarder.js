@@ -19,6 +19,10 @@ var boarder = {
     query.include('roomPointer')
     return query.find()
   },
+  get: function (id) {
+    const query = new Parse.Query(Boarder);
+    return query.get(id)
+  },
   pointer: function (id) {
     const object = new Boarder()
     object.id = id
