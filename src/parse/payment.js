@@ -5,14 +5,17 @@ const Boarder = Parse.Object.extend('boarder')
 const Room = Parse.Object.extend('room')
 
 var payment = {
-//   cloud: {
-//     list: (args = {}) => {
-//       return new Parse.Cloud.run('travelAuthorities', args)
-//     },
-//     get: (id) => {
-//       return new Parse.Cloud.run('travelAuthorities', {id:id, keyword:''})
-//     },
-//   },
+  cloud: {
+    chartPayment: (args = {}) => {
+      return new Parse.Cloud.run('chartPayment', {year: 2022})
+    },
+    list: (args = {}) => {
+      return new Parse.Cloud.run('travelAuthorities', args)
+    },
+    get: (id) => {
+      return new Parse.Cloud.run('travelAuthorities', {id:id, keyword:''})
+    },
+  },
   list: function () {
     const query = new Parse.Query(Payment);
     return query.find()
