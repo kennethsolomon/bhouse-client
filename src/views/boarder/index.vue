@@ -71,7 +71,7 @@
           <td>{{`Room ${boarder.get('roomPointer').get('room_number')}`}}</td>
           <th>
             <div class="flex space-x-3">
-              <button class="btn btn-primary btn-md" @click="showModal('payment-modal')">Add Payment</button>
+              <button class="btn btn-primary btn-md" @click.stop="showModal('payment-modal', boarder)">Add Payment</button>
               <button class="btn btn-primary btn-md" @click.stop="showModal('boarder-modal-edit', boarder)">Edit</button>
             </div>
           </th>
