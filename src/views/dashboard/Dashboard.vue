@@ -210,7 +210,6 @@ export default {
         this.chartData.datasets[0].data[payment.objectId-1] += (payment.count * 2000)
       });
     })
-
 	}
 
 }

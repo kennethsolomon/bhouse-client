@@ -1,4 +1,10 @@
 <template>
+  <PaymentModal
+    v-if="form_payment.modal"
+    :show="form_payment.modal"
+    :object="form_payment.object"
+    @closePaymentModal="closePaymentModal"
+  />
 <!-- MODAL ADD BOARDER -->
 	<div class="flex w-full justify-end text-end">
 		<!-- The button to open modal -->
@@ -39,30 +45,7 @@
         </div>
       </div>
 	</div>
-<!-- MODAL ADD PAYMENT -->
-	<div class="flex w-full justify-end text-end">
-		<!-- The button to open modal -->
-    <!-- <button @click="showModal('payment-modal')" class="btn modal-button m-2 mx-10 hidden md:block">add boarder</button> -->
-		<!-- Put this part before </body> tag -->
-		<input type="checkbox" id="payment-modal" class="modal-toggle" />
-      <div class="modal">
-        <div class="modal-box relative">
-          <label @click="reset()" for="payment-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-          <h3 class="text-lg font-bold my-2 text-start">PAYMENT</h3>
-          <div v-if="form.state == State.Error" class="alert alert-error shadow-lg mb-4">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>{{this.form.message}}</span>
-            </div>
-          </div>
-          <div class="flex flex-col space-y-2 form-control w-full">
-            <input v-model="form_payment.date" type="date" placeholder="Date" class="input input-bordered w-full" />
-            <input v-model="form_payment.remarks" type="input" placeholder="Remarks" class="input input-bordered w-full" />
-            <button class="btn w-full" @click="addPayment()" :class="{ loading: form_payment.state == State.Loading }">Submit</button>
-          </div>
-        </div>
-      </div>
-	</div>
+
 <!-- CARD -->
   <div class="flex flex-col space-y-3 justify-center w-full block md:hidden">
     <div
@@ -149,9 +132,12 @@
 import { State } from '@/common/variables'
 import { room } from '@/parse/room'
 import { boarder } from '@/parse/boarder'
-import { payment } from '@/parse/payment'
+import PaymentModal from '@/components/modal/payment/index.vue'
 const $ = function( id ) { return document.getElementById( id ); };
 export default {
+  components: {
+    PaymentModal
+  },
   data: () => ({
     State,
     form: {
@@ -169,29 +155,28 @@ export default {
       incase_of_emergency:null,
       room:null
     },
-    form_payment: {
-      id:null,
-      state: State.Initial,
-      boarder:null,
-      room:null,
-      remarks:null,
-      date: new Date().toISOString().split('T')[0],
-    },
     table: {
       boarders: null
+    },
+    form_payment: {
+      object: null,
+      modal: false
     }
   }),
   methods: {
     showModal(modal, boarder) {
-      $(modal).checked = !$(modal).checked
-
       if(modal === 'payment-modal') {
-        this.fetchBoarder(boarder.id)
+        this.form_payment.modal = true
+        this.form_payment.object = boarder
+      } else if(modal === 'boarder-modal') {
+        $('boarder-modal').checked = !$('boarder-modal').checked
       }
     },
+    closePaymentModal() {
+      this.form_payment.object = null
+      this.form_payment.modal = false
+    },
     edit(boarder) {
-      this.form_payment.state=State.Initial
-
       this.form.id=boarder.id,
       this.form.room=boarder.get('roomPointer').id
       this.form.status=boarder.get('status'),
@@ -205,23 +190,6 @@ export default {
 
       $('boarder-modal').checked = !$('boarder-modal').checked
     },
-    addPayment() {
-      try {
-        this.form_payment.state = State.Loading
-        payment.save(this.form_payment).then((data)=> {
-          this.$toast.success('New payment has been successfully added.')
-          this.form_payment.state = State.Done
-          $('payment-modal').checked = !$('payment-modal').checked
-          this.reset()
-        }).catch(error => {
-          this.form_payment.state = State.Error
-          this.form_payment.message = error.message
-        })
-      } catch (error) {
-        this.form.state = State.Error
-        this.form.message = error.message
-      }
-    },
     save() {
       try {
         this.form.state = State.Loading
@@ -230,7 +198,7 @@ export default {
           this.form.state = State.Done
           $('boarder-modal').checked = !$('boarder-modal').checked
           this.fetchBoarderList()
-          // this.reset()
+          this.reset()
         }).catch(error => {
           this.form.state = State.Error
           this.form.message = error.message
@@ -252,12 +220,6 @@ export default {
       this.form.office=null,
       this.form.incase_of_emergency=null,
       this.form.room='Select Room'
-
-      this.form_payment.state=State.Initial
-      this.form_payment.id=null
-      this.form_payment.boarder=null
-      this.form_payment.room=null
-      this.form_payment.remarks=null
     },
     fetchBoarderList() {
       boarder.list().then((result) => {
@@ -269,12 +231,6 @@ export default {
         this.form.rooms = result
       })
     },
-    fetchBoarder(id) {
-      boarder.get(id).then((result) => {
-        this.form_payment.boarder = result.id
-        this.form_payment.room = result.get('roomPointer').id
-      })
-    }
   },
   mounted() {
     this.fetchRoomList()
