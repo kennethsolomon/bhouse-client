@@ -1,51 +1,16 @@
 <template>
 <PaymentModal
   v-if="form_payment.modal"
-  :show="form_payment.modal"
   :object="form_payment.object"
   @closePaymentModal="closePaymentModal"
+  @successPayment="fetchBoarderList()"
 />
-<!-- MODAL ADD BOARDER -->
-	<div class="flex w-full justify-end text-end">
-		<!-- The button to open modal -->
-  <button @click="showModal('boarder-modal')" class="btn modal-button m-2 mx-10 hidden md:block">add boarder</button>
-		<!-- Put this part before </body> tag -->
-		<input type="checkbox" id="boarder-modal" class="modal-toggle" />
-      <div class="modal">
-        <div class="modal-box relative">
-          <label @click="reset()" for="boarder-modal" class="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-          <h3 class="text-lg font-bold my-2 text-start">{{`${form.id ? 'EDIT' : 'ADD'}`}} BOARDER</h3>
-          <div v-if="form.state == State.Error" class="alert alert-error shadow-lg mb-4">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <span>{{this.form.message}}</span>
-            </div>
-          </div>
-          <div class="flex flex-col space-y-2 form-control w-full">
-            <input v-model="form.fname" type="text" placeholder="First Name" class="input input-bordered w-full" />
-            <input v-model="form.mname" type="text" placeholder="Middle Name" class="input input-bordered w-full" />
-            <input v-model="form.lname" type="text" placeholder="Last Name" class="input input-bordered w-full" />
-            <input v-model="form.address" type="text" placeholder="Address" class="input input-bordered w-full" />
-            <input v-model="form.contact_number" type="text" placeholder="Contact Number" class="input input-bordered w-full" />
-            <input v-model="form.office" type="text" placeholder="Office" class="input input-bordered w-full" />
-            <input v-model="form.incase_of_emergency" type="text" placeholder="Incase of Emergency" class="input input-bordered w-full" />
-
-            <select v-model="form.room" class="select select-bordered">
-              <option disabled selected>Select Room</option>
-              <option v-for="(room, index) in form.rooms" :key="index" :value="room.id">{{`Room ${room.get('room_number')} with Capacity of ${room.get('capacity')}`}}</option>
-            </select>
-            <select v-model="form.status" class="select select-bordered">
-              <option disabled selected>Status</option>
-              <option value="active">Active</option>
-              <option value="deactivate">Deactivate</option>
-            </select>
-
-            <button class="btn w-full" @click="save()" :class="{ loading: form.state == State.Loading }">Submit</button>
-          </div>
-        </div>
-      </div>
-	</div>
-
+<BoarderModal
+  v-if="form_boarder.modal"
+  :object="form_boarder.object"
+  @closeBoarderModal="closeBoarderModal"
+  @suceessAddBoarder="fetchBoarderList()"
+/>
 <!-- CARD -->
   <div class="flex flex-col space-y-3 justify-center w-full block md:hidden">
     <div
@@ -72,11 +37,12 @@
               {{`Room Number: ${boarder.get('roomPointer').get('room_number')}`}}
             </p>
             <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="showModal('payment-modal', boarder)">Payment</button>
-            <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="edit(boarder)">Edit</button>
+            <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="showModal('boarder-modal-edit', boarder)">Edit</button>
         </div>
     </div>
 
-    <label for="boarder-modal" class="btn btn-circle modal-button m-2 fixed bottom-5 right-5 text-blue-500 h-31 w-31 text-2xl">+</label>
+    <button class="btn btn-circle modal-button m-2 fixed bottom-5 right-5 text-blue-500 h-31 w-31 text-2xl"
+      @click.stop="showModal('boarder-modal-add', boarder)">+</button>
   </div>
 
 <!-- TABLE -->
@@ -106,7 +72,7 @@
           <th>
             <div class="flex space-x-3">
               <button class="btn btn-primary btn-md" @click="showModal('payment-modal')">Add Payment</button>
-              <button class="btn btn-primary btn-md" @click="edit(boarder)">Edit</button>
+              <button class="btn btn-primary btn-md" @click.stop="showModal('boarder-modal-edit', boarder)">Edit</button>
             </div>
           </th>
         </tr>
@@ -130,33 +96,24 @@
 
 <script>
 import { State } from '@/common/variables'
-import { room } from '@/parse/room'
 import { boarder } from '@/parse/boarder'
 import PaymentModal from '@/components/modal/payment/index.vue'
+import BoarderModal from '@/components/modal/boarder/index.vue'
 const $ = function( id ) { return document.getElementById( id ); };
 export default {
   components: {
-    PaymentModal
+    PaymentModal,
+    BoarderModal,
   },
   data: () => ({
     State,
-    form: {
-      state: State.Initial,
-      message:null,
-      status:'active',
-      rooms:null, //Room List
-      id:null,
-      fname:null,
-      mname:null,
-      lname:null,
-      address:null,
-      contact_number:null,
-      office:null,
-      incase_of_emergency:null,
-      room:null
-    },
     table: {
       boarders: null
+    },
+    form_boarder: {
+      object: null,
+      modal: false,
+      type: null
     },
     form_payment: {
       object: null,
@@ -168,74 +125,32 @@ export default {
       if(modal === 'payment-modal') {
         this.form_payment.modal = true
         this.form_payment.object = boarder
-      } else if(modal === 'boarder-modal') {
-        $('boarder-modal').checked = !$('boarder-modal').checked
+      } else if(modal === 'boarder-modal-add') {
+        this.form_boarder.modal = true
+        this.form_boarder.object = boarder
+        this.form_boarder.type = 'add'
+      } else if(modal === 'boarder-modal-edit') {
+        this.form_boarder.modal = true
+        this.form_boarder.object = boarder
+        this.form_boarder.type = 'edit'
       }
     },
     closePaymentModal() {
       this.form_payment.object = null
       this.form_payment.modal = false
     },
-    edit(boarder) {
-      this.form.id=boarder.id,
-      this.form.room=boarder.get('roomPointer').id
-      this.form.status=boarder.get('status'),
-      this.form.fname=boarder.get('fname'),
-      this.form.mname=boarder.get('mname'),
-      this.form.lname=boarder.get('lname'),
-      this.form.address=boarder.get('address'),
-      this.form.contact_number=boarder.get('contact_number'),
-      this.form.office=boarder.get('office'),
-      this.form.incase_of_emergency=boarder.get('incase_of_emergency')
-
-      $('boarder-modal').checked = !$('boarder-modal').checked
-    },
-    save() {
-      try {
-        this.form.state = State.Loading
-        boarder.save(this.form).then((data)=> {
-          this.$toast.success('New record has been successfully added.')
-          this.form.state = State.Done
-          $('boarder-modal').checked = !$('boarder-modal').checked
-          this.fetchBoarderList()
-          this.reset()
-        }).catch(error => {
-          this.form.state = State.Error
-          this.form.message = error.message
-        })
-      } catch (error) {
-        this.form.state = State.Error
-        this.form.message = error.message
-      }
-    },
-    reset() {
-      this.form.state=State.Initial
-      this.form.status='active',
-      this.form.id=null
-      this.form.fname=null,
-      this.form.mname=null,
-      this.form.lname=null,
-      this.form.address=null,
-      this.form.contact_number=null,
-      this.form.office=null,
-      this.form.incase_of_emergency=null,
-      this.form.room='Select Room'
+    closeBoarderModal() {
+      this.form_boarder.object = null
+      this.form_boarder.modal = false
     },
     fetchBoarderList() {
       boarder.list().then((result) => {
         this.table.boarders = result
       })
     },
-    fetchRoomList() {
-      room.list().then((result) => {
-        this.form.rooms = result
-      })
-    },
   },
   mounted() {
-    this.fetchRoomList()
     this.fetchBoarderList()
-    this.reset()
   }
 
 }

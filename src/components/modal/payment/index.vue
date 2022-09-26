@@ -29,7 +29,6 @@ import { boarder } from '@/parse/boarder'
 import { payment } from '@/parse/payment'
 	export default {
     props: {
-      show: Boolean,
       object: Object
     },
     data: () => ({

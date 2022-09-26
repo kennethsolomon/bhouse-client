@@ -4,7 +4,7 @@
   :show="form_payment.modal"
   :object="form_payment.object"
   @closePaymentModal="closePaymentModal"
-  @successPayment="successPayment"
+  @successPayment="fetchBoarderList()"
 />
 <div v-if="notificationList?.length" class="bg-gray-800 mb-2">
     <div class="text-center w-full mx-auto py-6 px-4">
@@ -195,9 +195,6 @@ export default {
       } else if(modal === 'boarder-modal') {
         $('boarder-modal').checked = !$('boarder-modal').checked
       }
-    },
-    successPayment() {
-      this.fetchBoarderList()
     },
     closePaymentModal() {
       this.form_payment.object = null
