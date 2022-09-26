@@ -1,4 +1,11 @@
 <template>
+<PaymentModal
+  v-if="form_payment.modal"
+  :show="form_payment.modal"
+  :object="form_payment.object"
+  @closePaymentModal="closePaymentModal"
+  @successPayment="successPayment"
+/>
 <div v-if="notificationList?.length" class="bg-gray-800 mb-2">
     <div class="text-center w-full mx-auto py-6 px-4">
         <div class="flex justify-center space-x-2">
@@ -13,7 +20,7 @@
             <div class="shadow-lg rounded-2xl p-4 bg-gray-700 w-full">
                 <ul>
                   <li v-for="(boarder, index) in notificationList" :key="index" class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
-                      <div class="flex flex-col">
+                      <div class="flex flex-col" @click.stop="showModal('payment-modal', boarder)">
                           <span class="text-sm font-semibold ml-2" :class="boarder.color">
                             {{`${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}
                           </span>
@@ -93,6 +100,7 @@ import { HomeIcon, CreditCardIcon, BellAlertIcon } from '@heroicons/vue/24/solid
 import { payment } from '@/parse/payment'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import PaymentModal from '@/components/modal/payment/index.vue'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
@@ -101,6 +109,7 @@ export default {
     HomeIcon,
     CreditCardIcon,
     BellAlertIcon,
+    PaymentModal,
 
     // Chart.js
     Bar,
@@ -157,7 +166,12 @@ export default {
     chart:[],
 
 		room_data:[],
-    boarder_data: null
+    boarder_data: null,
+
+    form_payment: {
+      object: null,
+      modal: false
+    }
 	}),
   computed: {
     rooms(){
@@ -173,6 +187,23 @@ export default {
     }
   },
   methods: {
+// =============================================================================
+    showModal(modal, boarder) {
+      if(modal === 'payment-modal') {
+        this.form_payment.modal = true
+        this.form_payment.object = boarder
+      } else if(modal === 'boarder-modal') {
+        $('boarder-modal').checked = !$('boarder-modal').checked
+      }
+    },
+    successPayment() {
+      this.fetchBoarderList()
+    },
+    closePaymentModal() {
+      this.form_payment.object = null
+      this.form_payment.modal = false
+    },
+// =============================================================================
     fetchBoarderList() {
       boarder.list().then((result) => {
         result.forEach(boarder => {

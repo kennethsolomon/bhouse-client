@@ -1,10 +1,10 @@
 <template>
-  <PaymentModal
-    v-if="form_payment.modal"
-    :show="form_payment.modal"
-    :object="form_payment.object"
-    @closePaymentModal="closePaymentModal"
-  />
+<PaymentModal
+  v-if="form_payment.modal"
+  :show="form_payment.modal"
+  :object="form_payment.object"
+  @closePaymentModal="closePaymentModal"
+/>
 <!-- MODAL ADD BOARDER -->
 	<div class="flex w-full justify-end text-end">
 		<!-- The button to open modal -->

@@ -58,6 +58,7 @@ import { payment } from '@/parse/payment'
           payment.save(this.form_payment).then((data)=> {
             this.$toast.success('New payment has been successfully added.')
             this.form_payment.state = State.Done
+            this.$emit('successPayment')
             this.reset()
           }).catch(error => {
             this.form_payment.state = State.Error
