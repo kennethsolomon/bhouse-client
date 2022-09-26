@@ -1,4 +1,34 @@
 <template>
+<div v-if="notificationList?.length" class="bg-gray-800 mb-2">
+    <div class="text-center w-full mx-auto py-6 px-4">
+        <div class="flex justify-center space-x-2">
+          <BellAlertIcon class="h-9 w-9 text-green-500"/>
+          <h2 class="text-3xl font-extrabold mb-4 text-white">
+            Notifications
+          </h2>
+        </div>
+        <!-- Notification -->
+        <div class="flex justify-center">
+          <div class="h-ful w-full md:max-h-md md:max-w-xl md:w-9/12 md:h-4/6">
+            <div class="shadow-lg rounded-2xl p-4 bg-gray-700 w-full">
+                <ul>
+                  <li v-for="(boarder, index) in notificationList" :key="index" class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
+                      <div class="flex flex-col">
+                          <span class="text-sm font-semibold ml-2" :class="boarder.color">
+                            {{`${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}
+                          </span>
+                          <span class="text-sm text-gray-300 ml-2">
+                            {{boarder.payment_status}}
+                          </span>
+                      </div>
+                  </li>
+                </ul>
+            </div>
+          </div>
+        </div>
+        <!-- Notification -->
+    </div>
+</div>
 <div class="bg-gray-800">
     <div class="text-center w-full mx-auto py-6 px-4">
         <div class="flex justify-center space-x-2">
@@ -55,57 +85,6 @@
         <!-- Bar -->
     </div>
 </div>
-<div class="bg-gray-800 mt-3">
-    <div class="text-center w-full mx-auto py-6 px-4">
-        <div class="flex justify-center space-x-2">
-          <BellAlertIcon class="h-9 w-9 text-green-500"/>
-          <h2 class="text-3xl font-extrabold mb-4 text-white">
-            Notifications
-          </h2>
-        </div>
-        <!-- Notification -->
-        <div class="flex justify-center">
-          <div class="h-ful w-full md:max-h-md md:max-w-xl md:w-9/12 md:h-4/6">
-            <div class="shadow-lg rounded-2xl p-4 bg-gray-700 w-full">
-                <ul>
-                  <li class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
-                      <div class="flex flex-col">
-                          <span class="text-sm font-semibold text-white ml-2">
-                              Charlie Rabiller
-                          </span>
-                          <span class="text-sm text-gray-300 ml-2">
-                              Hey John ! Do you read the NextJS doc ?
-                          </span>
-                      </div>
-                  </li>
-                  <li class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
-                      <div class="flex flex-col">
-                          <span class="text-sm font-semibold text-white ml-2">
-                              Charlie Rabiller
-                          </span>
-                          <span class="text-sm text-gray-300 ml-2">
-                              Hey John ! Do you read the NextJS doc ?
-                          </span>
-                      </div>
-                  </li>
-                  <li class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
-                      <div class="flex flex-col">
-                          <span class="text-sm font-semibold text-white ml-2">
-                              Charlie Rabiller
-                          </span>
-                          <span class="text-sm text-gray-300 ml-2">
-                              Hey John ! Do you read the NextJS doc ?
-                          </span>
-                      </div>
-                  </li>
-                </ul>
-            </div>
-
-          </div>
-        </div>
-        <!-- Bar -->
-    </div>
-</div>
 </template>
 <script>
 import { boarder } from '@/parse/boarder'
@@ -115,7 +94,6 @@ import { payment } from '@/parse/payment'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
-
 
 export default {
   components:
@@ -176,11 +154,10 @@ export default {
     chartOptions: {
       responsive: true
     },
-
-
+    chart:[],
 
 		room_data:[],
-    chart:[]
+    boarder_data: null
 	}),
   computed: {
     rooms(){
@@ -190,14 +167,36 @@ export default {
         data.push(element)
       });
       return data
+    },
+    notificationList(){
+      return this.boarder_data?.filter(boarder => boarder?.payment_status !== null)
     }
   },
   methods: {
-    test() {
-      console.log(this.room_data)
-    }
+    fetchBoarderList() {
+      boarder.list().then((result) => {
+        result.forEach(boarder => {
+          let Difference_In_Time = new Date(new Date().setHours(0,0,0,0)).getTime() - new Date(boarder.get('next_payment')).getTime();
+          let Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+          if(Number(new Date(boarder.get('remind_date'))) <= Number(new Date(new Date().setHours(0,0,0,0)))) {
+            if(Difference_In_Days < 0) {
+              boarder.payment_status = 'You currently have ' + Math.abs(Difference_In_Days) + ' day/days left, before your due date.'
+              boarder.color = 'text-white'
+            } else {
+              boarder.payment_status = 'Your payment is delayed for ' + Difference_In_Days + ' day/days, please pay now.'
+              boarder.color = 'text-red-400'
+            }
+          } else {
+            boarder.payment_status = null
+          }
+        });
+        this.boarder_data = result
+      })
+    },
   },
 	mounted() {
+    this.fetchBoarderList()
     boarder.cloud.countRoom().then((rooms)=> {
       rooms.forEach(data => {
         room.pointer(data.objectId).fetch().then((room_data) => {
