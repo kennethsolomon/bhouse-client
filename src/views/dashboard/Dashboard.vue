@@ -39,7 +39,7 @@
 <div class="bg-gray-800">
     <div class="text-center w-full mx-auto py-6 px-4">
         <div class="flex justify-center space-x-2">
-          <HomeIcon class="h-9 w-9 text-green-500"/>
+          <router-link to="/boarder"><HomeIcon class="h-9 w-9 text-green-500"/></router-link>
           <h2 class="text-3xl font-extrabold mb-4 text-white">
             Room Status
           </h2>
