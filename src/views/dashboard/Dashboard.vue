@@ -1,6 +1,6 @@
 <template>
 <div class="bg-gray-800">
-    <div class="text-center w-full mx-auto py-14 px-4">
+    <div class="text-center w-full mx-auto py-6 px-4">
         <div class="flex justify-center space-x-2">
           <HomeIcon class="h-9 w-9 text-green-500"/>
           <h2 class="text-3xl font-extrabold mb-4 text-white">
@@ -55,11 +55,62 @@
         <!-- Bar -->
     </div>
 </div>
+<div class="bg-gray-800 mt-3">
+    <div class="text-center w-full mx-auto py-6 px-4">
+        <div class="flex justify-center space-x-2">
+          <BellAlertIcon class="h-9 w-9 text-green-500"/>
+          <h2 class="text-3xl font-extrabold mb-4 text-white">
+            Notifications
+          </h2>
+        </div>
+        <!-- Notification -->
+        <div class="flex justify-center">
+          <div class="h-ful w-full md:max-h-md md:max-w-xl md:w-9/12 md:h-4/6">
+            <div class="shadow-lg rounded-2xl p-4 bg-gray-700 w-full">
+                <ul>
+                  <li class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
+                      <div class="flex flex-col">
+                          <span class="text-sm font-semibold text-white ml-2">
+                              Charlie Rabiller
+                          </span>
+                          <span class="text-sm text-gray-300 ml-2">
+                              Hey John ! Do you read the NextJS doc ?
+                          </span>
+                      </div>
+                  </li>
+                  <li class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
+                      <div class="flex flex-col">
+                          <span class="text-sm font-semibold text-white ml-2">
+                              Charlie Rabiller
+                          </span>
+                          <span class="text-sm text-gray-300 ml-2">
+                              Hey John ! Do you read the NextJS doc ?
+                          </span>
+                      </div>
+                  </li>
+                  <li class="flex justify-center items-center my-2 space-x-2 bg-slate-600 rounded-xl p-2">
+                      <div class="flex flex-col">
+                          <span class="text-sm font-semibold text-white ml-2">
+                              Charlie Rabiller
+                          </span>
+                          <span class="text-sm text-gray-300 ml-2">
+                              Hey John ! Do you read the NextJS doc ?
+                          </span>
+                      </div>
+                  </li>
+                </ul>
+            </div>
+
+          </div>
+        </div>
+        <!-- Bar -->
+    </div>
+</div>
 </template>
 <script>
 import { boarder } from '@/parse/boarder'
 import { room } from '@/parse/room'
-import { HomeIcon, CreditCardIcon } from '@heroicons/vue/24/solid'
+import { HomeIcon, CreditCardIcon, BellAlertIcon } from '@heroicons/vue/24/solid'
 import { payment } from '@/parse/payment'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
@@ -71,6 +122,7 @@ export default {
   {
     HomeIcon,
     CreditCardIcon,
+    BellAlertIcon,
 
     // Chart.js
     Bar,

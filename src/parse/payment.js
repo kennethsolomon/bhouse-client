@@ -37,10 +37,27 @@ var payment = {
   save: function (args = {}) {
     const { id, boarder, room, date,remarks } = args
     const object = new Payment()
-	const newDate = new Date(date);
+    const newDate = new Date(date);
 
-	const boarderPointer = Boarder.createWithoutData(boarder);
-	const roomPointer = Room.createWithoutData(room);
+    const boarderPointer = Boarder.createWithoutData(boarder);
+    const roomPointer = Room.createWithoutData(room);
+
+    const query = new Parse.Query(Boarder);
+    query.get(boarder).then((current_boarder) => {
+      const current_date = current_boarder.get('next_payment') ? current_boarder.get('next_payment') : new Date()
+      const boarder_data = new Boarder()
+      const add_day = addDays(new Date(current_date), 30)
+      const five_days_before_deadline =
+        addDays(new Date(current_date), 30)
+        .setDate(addDays(new Date(current_date), 30)
+        .getDate()-5)
+      const formated_deadline = new Date(five_days_before_deadline)
+
+      boarder_data.set('id', boarder)
+      boarder_data.set('next_payment', add_day.toDateString())
+      boarder_data.set('remind_date', formated_deadline.toDateString())
+      boarder_data.save()
+    })
 
     if (id) object.set('id', id)
     object.set('date', newDate)
@@ -50,5 +67,9 @@ var payment = {
     return object.save()
   },
 }
-
+function addDays(date, days) {
+  const copy = new Date(Number(date))
+  copy.setDate(date.getDate() + days)
+  return copy
+}
 export { payment }
