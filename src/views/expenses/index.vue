@@ -12,7 +12,7 @@
   @closeBoarderModal="closeBoarderModal"
   @suceessAddBoarder="fetchBoarderList()"
 />
-
+<h1>Testing Expense Page</h1>
 <!-- CARD -->
   <div class="flex flex-col space-y-3 justify-center w-full block md:hidden">
     <div

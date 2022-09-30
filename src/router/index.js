@@ -1,4 +1,3 @@
-import Parse from 'parse'
 import { createRouter, createWebHistory } from "vue-router";
 import { authGuard } from '@/helpers/AuthGuard.js'
 
@@ -18,6 +17,13 @@ const routes = [
     name: 'Boarder',
     components: {
       admin: () => import('../views/boarder/index.vue'),
+    }
+  },
+  {
+    path: '/expenses',
+    name: 'Expenses',
+    components: {
+      admin: () => import('../views/expenses/index.vue'),
     }
   },
   {

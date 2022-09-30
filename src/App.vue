@@ -15,6 +15,7 @@
           <!-- Navbar menu content here -->
         <li class="cursor-pointer"><router-link to="/">Dashboard</router-link></li>
         <li class="cursor-pointer"><router-link to="/boarder">Boader</router-link></li>
+        <li class="cursor-pointer"><router-link to="/expenses">Expenses</router-link></li>
         <li class="cursor-pointer"><span @click="signOut()">Logout</span></li>
         </ul>
       </div>
@@ -29,6 +30,7 @@
       <div class="flex flex-col w-full justify-center">
         <li class="cursor-pointer w-full"><router-link class="justify-center" to="/">Dashboard</router-link></li>
         <li class="cursor-pointer w-full"><router-link class="justify-center" to="/boarder">Boader</router-link></li>
+        <li class="cursor-pointer w-full"><router-link class="justify-center" to="/expenses">Expenses</router-link></li>
       </div>
       <div class="flex justify-center">
         <li class="cursor-pointer w-full"><span class="justify-center" @click="signOut()">Logout</span></li>
