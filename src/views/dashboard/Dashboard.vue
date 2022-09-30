@@ -199,7 +199,7 @@ export default {
     },
     notificationList(){
       return this.boarder_data?.filter(boarder => boarder?.payment_status !== null)
-    }
+    },
   },
   methods: {
     addBoarder(boarder) {

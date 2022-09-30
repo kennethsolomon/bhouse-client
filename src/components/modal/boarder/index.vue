@@ -26,7 +26,7 @@
 
 		<select v-model="form.room" class="select select-bordered">
 			<option disabled selected>Select Room</option>
-			<option v-for="(room, index) in form.rooms" :key="index" :value="room.id">{{`Room ${room.get('room_number')} with Capacity of ${room.get('capacity')}`}}</option>
+			<option v-for="(room, index) in mergeRoom" :key="index" :value="room.data.id" :disabled="roomFull(room.data.get('capacity'), room.count)">{{`Room ${room.data.get('room_number')} with Capacity of ${room.data.get('capacity')}, ${room.count}`}}</option>
 		</select>
 		<select v-model="form.status" class="select select-bordered">
 			<option disabled selected>Status</option>
@@ -66,10 +66,31 @@ import { room } from '@/parse/room'
         contact_number:null,
         office:null,
         incase_of_emergency:null,
-        room:'Select Room'
+        room:'Select Room',
+        room_data: [],
+        room_data2: [],
       },
     }),
+    computed: {
+      mergeRoom() {
+        const arr = [...this.form.room_data2, ...this.form.room_data]
+        const uniqueIds = [];
+        const unique = arr.filter(element => {
+          const isDuplicate = uniqueIds.includes(element.data.id);
+          if (!isDuplicate) {
+            uniqueIds.push(element.data.id);
+            return true;
+          }
+          return false;
+        });
+
+        return unique
+      }
+    },
     methods: {
+      roomFull(capacity, count) {
+        return capacity <= count ? true : false
+      },
       save() {
         try {
           this.form.state = State.Loading
@@ -114,8 +135,19 @@ import { room } from '@/parse/room'
         this.$emit('closeBoarderModal')
       },
       fetchRoomList() {
-        room.list().then((result) => {
-          this.form.rooms = result
+        boarder.cloud.countRoom().then((rooms)=> {
+          room.list().then((result) => {
+            result.forEach(data => {
+              delete data._objCount;
+              this.form.room_data.push({data:data, count:0})
+            })
+          })
+          rooms.forEach(data => {
+            room.pointer(data.objectId).fetch().then((room_data) => {
+              delete room_data._objCount;
+              this.form.room_data2.push({data:room_data, count:data.count})
+            })
+          });
         })
       },
     },
