@@ -25,7 +25,6 @@
 		<input v-model="form.incase_of_emergency" type="text" placeholder="Incase of Emergency" class="input input-bordered w-full" />
 
 		<select v-model="form.room" class="select select-bordered">
-
 			<option disabled selected>Select Room</option>
 			<option v-for="(room, index) in mergeRoom" :key="index" :value="room.data.id" :disabled="roomFull(room.data.get('capacity'), room.count)">{{`Room ${room.data.get('room_number')} with Capacity of ${room.count}/${room.data.get('capacity')}`}}</option>
 		</select>
