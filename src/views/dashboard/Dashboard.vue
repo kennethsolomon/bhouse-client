@@ -54,7 +54,7 @@
         <!-- Room Status -->
         <div class="flex flex-col md:flex-row justify-center md:space-y-0 space-y-2 md:space-x-2">
             <div v-for="(data, index) in rooms" :key="index">
-              <div @click="addBoarder(data)" class="shadow-lg rounded-2xl w-full md:w-full p-6 bg-gray-700">
+              <div @click="data.available > 0 && addBoarder(data)" class="shadow-lg rounded-2xl w-full md:w-full p-6 bg-gray-700">
                 <div class="flex items-center">
                   <HomeIcon class="h-6 w-6 text-green-500"/>
                   <p class="text-md text-gray-50 ml-2">
