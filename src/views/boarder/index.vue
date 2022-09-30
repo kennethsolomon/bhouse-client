@@ -8,6 +8,7 @@
 <BoarderModal
   v-if="form_boarder.modal"
   :object="form_boarder.object"
+  :type="form_boarder.type"
   @closeBoarderModal="closeBoarderModal"
   @suceessAddBoarder="fetchBoarderList()"
 />

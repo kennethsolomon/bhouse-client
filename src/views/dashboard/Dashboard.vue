@@ -6,6 +6,13 @@
   @closePaymentModal="closePaymentModal"
   @successPayment="fetchBoarderList()"
 />
+<BoarderModal
+  v-if="form_boarder.modal"
+  :object="form_boarder.object"
+  :type="form_boarder.type"
+  @closeBoarderModal="closeBoarderModal"
+  @suceessAddBoarder="fetchVacantRoom()"
+/>
 <div v-if="notificationList?.length" class="bg-gray-800 mb-2">
     <div class="text-center w-full mx-auto py-6 px-4">
         <div class="flex justify-center space-x-2">
@@ -47,7 +54,7 @@
         <!-- Room Status -->
         <div class="flex flex-col md:flex-row justify-center md:space-y-0 space-y-2 md:space-x-2">
             <div v-for="(data, index) in rooms" :key="index">
-              <div class="shadow-lg rounded-2xl w-full md:w-full p-6 bg-gray-700">
+              <div @click="addBoarder(data)" class="shadow-lg rounded-2xl w-full md:w-full p-6 bg-gray-700">
                 <div class="flex items-center">
                   <HomeIcon class="h-6 w-6 text-green-500"/>
                   <p class="text-md text-gray-50 ml-2">
@@ -101,6 +108,7 @@ import { payment } from '@/parse/payment'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import PaymentModal from '@/components/modal/payment/index.vue'
+import BoarderModal from '@/components/modal/boarder/index.vue'
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
@@ -110,6 +118,7 @@ export default {
     CreditCardIcon,
     BellAlertIcon,
     PaymentModal,
+    BoarderModal,
 
     // Chart.js
     Bar,
@@ -171,7 +180,13 @@ export default {
     form_payment: {
       object: null,
       modal: false
-    }
+    },
+
+    form_boarder: {
+      object: null,
+      modal: false,
+      type: null
+    },
 	}),
   computed: {
     rooms(){
@@ -187,6 +202,15 @@ export default {
     }
   },
   methods: {
+    addBoarder(boarder) {
+      this.form_boarder.modal = true
+      this.form_boarder.object = boarder
+      this.form_boarder.type = 'add-dashboard'
+    },
+    closeBoarderModal() {
+      this.form_boarder.object = null
+      this.form_boarder.modal = false
+    },
 // =============================================================================
     showModal(modal, boarder) {
       if(modal === 'payment-modal') {
@@ -222,24 +246,30 @@ export default {
         this.boarder_data = result
       })
     },
+    fetchVacantRoom() {
+      this.fetchBoarderList()
+      this.fetchIncomeExpenses()
+      boarder.cloud.countRoom().then((rooms)=> {
+        this.room_data = []
+        rooms.forEach(data => {
+          room.pointer(data.objectId).fetch().then((room_data) => {
+            this.room_data.push({room:room_data, count:data.count})
+          })
+        });
+      })
+    },
+    fetchIncomeExpenses() {
+      payment.cloud.chartPayment().then((payments)=> {
+        payments.forEach(payment => {
+          this.chartData.datasets[0].data[payment.objectId-1] += (payment.count * 2000)
+        });
+      })
+    }
   },
 	mounted() {
-    this.fetchBoarderList()
-    boarder.cloud.countRoom().then((rooms)=> {
-      rooms.forEach(data => {
-        room.pointer(data.objectId).fetch().then((room_data) => {
-          this.room_data.push({room:room_data, count:data.count})
-        })
-      });
-    })
-
-    payment.cloud.chartPayment().then((payments)=> {
-      payments.forEach(payment => {
-        this.chartData.datasets[0].data[payment.objectId-1] += (payment.count * 2000)
-      });
-    })
+    this.fetchVacantRoom()
+    this.fetchIncomeExpenses()
 	}
-
 }
 </script>
 

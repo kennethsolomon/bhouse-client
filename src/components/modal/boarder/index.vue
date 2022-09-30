@@ -124,7 +124,8 @@ import { room } from '@/parse/room'
       this.fetchRoomList()
     },
     created() {
-      this.edit()
+      if(this.type === 'edit') this.edit()
+      if(this.type === 'add-dashboard') this.form.room=this.object.room.id
     }
 	}
 </script>
