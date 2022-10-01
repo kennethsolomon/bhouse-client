@@ -4,17 +4,17 @@ import moment from 'moment'
 const Expense = Parse.Object.extend('expense')
 
 var expense = {
-  // cloud: {
-  //   chartExpense: (args = {}) => {
-  //     return new Parse.Cloud.run('chartExpense', {year: 2022})
-  //   },
-  //   list: (args = {}) => {
-  //     return new Parse.Cloud.run('travelAuthorities', args)
-  //   },
-  //   get: (id) => {
-  //     return new Parse.Cloud.run('travelAuthorities', {id:id, keyword:''})
-  //   },
-  // },
+  cloud: {
+    chartExpense: (args = {}) => {
+      return new Parse.Cloud.run('chartExpense', {year: 2022})
+    },
+    list: (args = {}) => {
+      return new Parse.Cloud.run('travelAuthorities', args)
+    },
+    get: (id) => {
+      return new Parse.Cloud.run('travelAuthorities', {id:id, keyword:''})
+    },
+  },
   list: function (args = {}) {
     const { year } = args
     const query = new Parse.Query(Expense);
@@ -38,7 +38,7 @@ var expense = {
     if (id) object.set('id', id)
     object.set('name', name)
     object.set('price', price)
-    object.set('date', date)
+    object.set('date', new Date(date))
     object.set('year', moment(date).format('YYYY'))
     return object.save()
   },

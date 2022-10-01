@@ -14,6 +14,7 @@
           </div>
           <div class="flex flex-col space-y-2 form-control w-full">
             <input v-model="form_payment.date" type="date" placeholder="Date" class="input input-bordered w-full" />
+            <input v-model.number="form_payment.price" type="input" placeholder="Price" class="input input-bordered w-full" />
             <input v-model="form_payment.remarks" type="input" placeholder="Remarks" class="input input-bordered w-full" />
             <button class="btn w-full" @click="addPayment()" :class="{ loading: form_payment.state == State.Loading }">Submit</button>
           </div>
@@ -40,6 +41,7 @@ import { payment } from '@/parse/payment'
         boarder:null,
         room:null,
         remarks:null,
+        price:2000,
         date: new Date().toISOString().split('T')[0],
         message:null,
       },
@@ -74,6 +76,7 @@ import { payment } from '@/parse/payment'
         this.form_payment.boarder=null
         this.form_payment.room=null
         this.form_payment.remarks=null
+        this.form_payment.price=null
         this.form_payment.message=null
         this.$emit('closePaymentModal')
       }

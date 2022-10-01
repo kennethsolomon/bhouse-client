@@ -105,6 +105,7 @@ import { boarder } from '@/parse/boarder'
 import { room } from '@/parse/room'
 import { HomeIcon, CreditCardIcon, BellAlertIcon } from '@heroicons/vue/24/solid'
 import { payment } from '@/parse/payment'
+import { expense } from '@/parse/expense'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import PaymentModal from '@/components/modal/payment/index.vue'
@@ -160,12 +161,12 @@ export default {
         {
           label: 'Income',
           backgroundColor: '#00d764',
-          data: [4000, 2000, 2300, 3000, 2300, 4894, 5300, 0, 0, 2422, 4324, 3334],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         },
         {
           label: 'Expenses',
           backgroundColor: 'red',
-          data: [2500, 1400, 1300, 2300, 1400, 1894, 2300, 1343, 2314, 1422, 3324, 2334],
+          data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         },
       ]
     },
@@ -261,7 +262,15 @@ export default {
     fetchIncome() {
       payment.cloud.chartPayment().then((payments)=> {
         payments.forEach(payment => {
-          this.chartData.datasets[0].data[payment.objectId-1] += (payment.count * 2000)
+          this.chartData.datasets[0].data[payment.objectId-1] = payment.price
+        });
+      })
+    },
+    fetchExpense() {
+      expense.cloud.chartExpense().then((expenses)=> {
+        console.log(expenses)
+        expenses.forEach(expense => {
+          this.chartData.datasets[1].data[expense.objectId-1] = expense.price
         });
       })
     }
@@ -269,6 +278,7 @@ export default {
 	mounted() {
     this.fetchVacantRoom()
     this.fetchIncome()
+    this.fetchExpense()
 	}
 }
 </script>

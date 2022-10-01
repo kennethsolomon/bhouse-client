@@ -35,7 +35,7 @@ var payment = {
 	return query.find()
   },
   save: function (args = {}) {
-    const { id, boarder, room, date,remarks } = args
+    const { id, boarder, room, date, price, remarks } = args
     const object = new Payment()
     const newDate = new Date(date);
 
@@ -61,6 +61,7 @@ var payment = {
 
     if (id) object.set('id', id)
     object.set('date', newDate)
+    object.set('price', price)
     object.set('remarks', remarks)
     object.set('boarderPointer', boarderPointer)
     object.set('roomPointer', roomPointer)
