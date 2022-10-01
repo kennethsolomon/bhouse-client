@@ -13,6 +13,16 @@
   @suceessAddBoarder="fetchBoarderList()"
 />
 
+<div class="bg-gray-800 mb-2">
+  <div class="text-center w-full mx-auto py-6 px-4">
+      <div class="flex justify-center space-x-2">
+        <UserIcon class="h-9 w-9 text-green-500"/>
+        <h2 class="text-3xl font-extrabold mb-4 text-white">
+          Boarders
+        </h2>
+      </div>
+  </div>
+</div>
 <!-- CARD -->
   <div class="flex flex-col space-y-3 justify-center w-full block md:hidden">
     <div
@@ -99,11 +109,13 @@
 <script>
 import { State } from '@/common/variables'
 import { boarder } from '@/parse/boarder'
+import { UserIcon } from '@heroicons/vue/24/solid'
 import PaymentModal from '@/components/modal/payment/index.vue'
 import BoarderModal from '@/components/modal/boarder/index.vue'
 const $ = function( id ) { return document.getElementById( id ); };
 export default {
   components: {
+    UserIcon,
     PaymentModal,
     BoarderModal,
   },
