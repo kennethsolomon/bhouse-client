@@ -37,8 +37,14 @@
         </div>
     </div>
 
+    <button class="btn btn-circle modal-button m-2 fixed bottom-20 right-5 text-blue-500 h-31 w-31 text-2xl"
+      @click.stop="showModal('expense-modal')">
+        <MagnifyingGlassIcon class="h-5 w-5 text-blue-500"/>
+    </button>
+
     <button class="btn btn-circle modal-button m-2 fixed bottom-5 right-5 text-blue-500 h-31 w-31 text-2xl"
       @click.stop="showModal('expense-modal')">+</button>
+
   </div>
 
 <!-- TABLE -->
@@ -82,12 +88,13 @@
 import moment from 'moment'
 import { State } from '@/common/variables'
 import { expense } from '@/parse/expense'
-import { CreditCardIcon } from '@heroicons/vue/24/solid'
+import { CreditCardIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/solid'
 import ExpenseModal from '@/components/modal/expenses/index.vue'
 const $ = function( id ) { return document.getElementById( id ); };
 export default {
   components: {
     CreditCardIcon,
+    MagnifyingGlassIcon,
     ExpenseModal,
   },
   data: () => ({
