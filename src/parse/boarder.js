@@ -33,6 +33,7 @@ var boarder = {
     const query = new Parse.Query(Boarder);
     query.equalTo('status', 'active')
     query.include('roomPointer')
+    query.descending("createdAt");
     return query.find()
   },
   get: function (id) {

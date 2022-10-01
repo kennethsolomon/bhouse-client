@@ -1,50 +1,34 @@
 <template>
-<PaymentModal
-  v-if="form_payment.modal"
-  :object="form_payment.object"
-  @closePaymentModal="closePaymentModal"
-  @successPayment="fetchBoarderList()"
+<ExpenseModal
+  v-if="form_expense.modal"
+  :object="form_expense.object"
+  :type="form_expense.type"
+  @closeExpenseModal="closeExpenseModal"
+  @successExpense="fetchBoarderList()"
 />
-<BoarderModal
-  v-if="form_boarder.modal"
-  :object="form_boarder.object"
-  :type="form_boarder.type"
-  @closeBoarderModal="closeBoarderModal"
-  @suceessAddBoarder="fetchBoarderList()"
-/>
-<h1>Testing Expense Page</h1>
 <!-- CARD -->
-  <div class="flex flex-col space-y-3 justify-center w-full block md:hidden">
+  <div class="flex flex-col space-y-3 justify-center w-full md:hidden">
     <div
-      v-for="( boarder, index ) in table.boarders" :key="index"
-      @click="edit(boarder)"
+      v-for="( boarder, index ) in table.expenses" :key="index"
+      @click="showModal('expense-modal-edit', boarder)"
       class="shadow-lg rounded-2xl w-full p-4 bg-gray-800 relative overflow-hidden">
         <div  class="w-full">
             <p class="text-white text-lg font-medium mb-2">
-              {{`${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}
+              {{`${boarder.get('name')}`}}
             </p>
             <p class="text-gray-300 text-sm">
-              {{`Address: ${boarder.get('address')}`}}
+              {{`Price: ${formatPrice(boarder.get('price'))}`}}
             </p>
             <p class="text-gray-300 text-sm">
-              {{`Contact Number: ${boarder.get('contact_number')}`}}
+              {{`Date: ${formatDate(boarder.get('date'))}`}}
             </p>
-            <p class="text-gray-300 text-sm">
-              {{`Office: ${boarder.get('office')}`}}
-            </p>
-            <p class="text-gray-300 text-sm">
-              {{`Incase of Emergency: ${boarder.get('incase_of_emergency')}`}}
-            </p>
-            <p class="text-gray-300 text-sm">
-              {{`Room Number: ${boarder.get('roomPointer').get('room_number')}`}}
-            </p>
-            <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="showModal('payment-modal', boarder)">Payment</button>
-            <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="showModal('boarder-modal-edit', boarder)">Edit</button>
+            <!-- <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="showModal('expense-modal')">Edit</button> -->
+            <!-- <button class="btn bg-indigo-500 text-white btn-sm my-2 mx-1" @click.stop="showModal('boarder-modal-edit', boarder)">Edit</button> -->
         </div>
     </div>
 
     <button class="btn btn-circle modal-button m-2 fixed bottom-5 right-5 text-blue-500 h-31 w-31 text-2xl"
-      @click.stop="showModal('boarder-modal-add', boarder)">+</button>
+      @click.stop="showModal('expense-modal')">+</button>
   </div>
 
 <!-- TABLE -->
@@ -53,24 +37,16 @@
       <!-- head -->
       <thead>
         <tr>
-          <th>Full Name</th>
-          <th>Address</th>
-          <th>Contact Number</th>
-          <th>Office</th>
-          <th>Incase of Emergency</th>
-          <th>Room Number</th>
+          <th>Name</th>
+          <th>Date</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <!-- row 1 -->
-        <tr class="hover" v-for="( boarder, index ) in table.boarders" :key="index">
-          <td>{{`${boarder.get('fname')} ${boarder.get('mname')} ${boarder.get('lname')}`}}</td>
-          <td>{{`${boarder.get('address')}`}}</td>
-          <td>{{`${boarder.get('contact_number')}`}}</td>
-          <td>{{`${boarder.get('office')}`}}</td>
-          <td>{{`${boarder.get('incase_of_emergency')}`}}</td>
-          <td>{{`Room ${boarder.get('roomPointer').get('room_number')}`}}</td>
+        <tr class="hover" v-for="( boarder, index ) in table.expenses" :key="index">
+          <td>Name</td>
+          <td>date</td>
           <th>
             <div class="flex space-x-3">
               <button class="btn btn-primary btn-md" @click.stop="showModal('payment-modal', boarder)">Add Payment</button>
@@ -82,12 +58,8 @@
       <!-- foot -->
       <tfoot>
         <tr>
-          <th>Full Name</th>
-          <th>Address</th>
-          <th>Contact Number</th>
-          <th>Office</th>
-          <th>Incase of Emergency</th>
-          <th>Room Number</th>
+          <th>Name</th>
+          <th>Date</th>
           <th>Action</th>
         </tr>
       </tfoot>
@@ -97,59 +69,59 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { State } from '@/common/variables'
-import { boarder } from '@/parse/boarder'
-import PaymentModal from '@/components/modal/payment/index.vue'
-import BoarderModal from '@/components/modal/boarder/index.vue'
+import { expense } from '@/parse/expense'
+import ExpenseModal from '@/components/modal/expenses/index.vue'
 const $ = function( id ) { return document.getElementById( id ); };
 export default {
   components: {
-    PaymentModal,
-    BoarderModal,
+    ExpenseModal,
   },
   data: () => ({
     State,
     table: {
-      boarders: null
+      expenses: null
     },
-    form_boarder: {
+    form_expense: {
       object: null,
       modal: false,
       type: null
-    },
-    form_payment: {
-      object: null,
-      modal: false
     }
   }),
   methods: {
-    showModal(modal, boarder) {
-      if(modal === 'payment-modal') {
-        this.form_payment.modal = true
-        this.form_payment.object = boarder
-      } else if(modal === 'boarder-modal-add') {
-        this.form_boarder.modal = true
-        this.form_boarder.object = boarder
-        this.form_boarder.type = 'add'
-      } else if(modal === 'boarder-modal-edit') {
-        this.form_boarder.modal = true
-        this.form_boarder.object = boarder
-        this.form_boarder.type = 'edit'
+    showModal(modal,boarder={}) {
+      if(modal === 'expense-modal') {
+        this.form_expense.modal = true
+      } else if(modal === 'expense-modal-edit') {
+        this.form_expense.modal = true
+        this.form_expense.object = boarder
+        this.form_expense.type = 'edit'
       }
     },
-    closePaymentModal() {
-      this.form_payment.object = null
-      this.form_payment.modal = false
-    },
-    closeBoarderModal() {
-      this.form_boarder.object = null
-      this.form_boarder.modal = false
+    closeExpenseModal() {
+      this.form_expense.modal = false
     },
     fetchBoarderList() {
-      boarder.list().then((result) => {
-        this.table.boarders = result
+      expense.list({year: String(2022)}).then((result) => {
+        this.table.expenses = result
       })
     },
+    formatDate(date) {
+      return moment(date).format('LL')
+    },
+    formatPrice(price) {
+      let formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'PHP',
+
+        // These options are needed to round to whole numbers if that's what you want.
+        //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+        //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+      });
+
+      return formatter.format(price);
+    }
   },
   mounted() {
     this.fetchBoarderList()

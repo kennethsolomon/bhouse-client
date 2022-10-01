@@ -165,8 +165,8 @@ export default {
         {
           label: 'Expenses',
           backgroundColor: 'red',
-          data: [4000, 1400, 1300, 2300, 1400, 1894, 2300, 1343, 2314, 1422, 3324, 2334],
-        }
+          data: [2500, 1400, 1300, 2300, 1400, 1894, 2300, 1343, 2314, 1422, 3324, 2334],
+        },
       ]
     },
     chartOptions: {
@@ -248,7 +248,7 @@ export default {
     },
     fetchVacantRoom() {
       this.fetchBoarderList()
-      this.fetchIncomeExpenses()
+      this.fetchIncome()
       boarder.cloud.countRoom().then((rooms)=> {
         this.room_data = []
         rooms.forEach(data => {
@@ -258,7 +258,7 @@ export default {
         });
       })
     },
-    fetchIncomeExpenses() {
+    fetchIncome() {
       payment.cloud.chartPayment().then((payments)=> {
         payments.forEach(payment => {
           this.chartData.datasets[0].data[payment.objectId-1] += (payment.count * 2000)
@@ -268,7 +268,7 @@ export default {
   },
 	mounted() {
     this.fetchVacantRoom()
-    this.fetchIncomeExpenses()
+    this.fetchIncome()
 	}
 }
 </script>

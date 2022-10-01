@@ -13,10 +13,12 @@ var room = {
 //   },
   list: function () {
     const query = new Parse.Query(Room);
+    query.descending("createdAt");
     return query.find()
   },
   get: function (id) {
     const query = new Parse.Query(Room);
+    query.descending("createdAt");
     return query.get(id)
   },
   pointer: function (id) {
