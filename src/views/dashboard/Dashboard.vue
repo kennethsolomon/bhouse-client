@@ -98,6 +98,217 @@
         </div>
         <!-- Bar -->
     </div>
+    <div class="shadow-lg w-full md:w-80 p-4 bg-gray-800 relative overflow-hidden">
+        <div class="w-full flex items-center justify-between mb-8">
+          <p class="text-white text-xl">
+                Profit
+            </p>
+        </div>
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[0] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      January
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[0] >= 0, 'text-red-400':profitCalculator[0] <= 0}" >
+                    {{formatPrice(profitCalculator[0])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[1] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      February
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[1] >= 0, 'text-red-400':profitCalculator[1] <= 0}" >
+                    {{formatPrice(profitCalculator[1])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[2] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      March
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[2] >= 0, 'text-red-400':profitCalculator[2] <= 0}" >
+                    {{formatPrice(profitCalculator[2])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[3] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      April
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[3] >= 0, 'text-red-400':profitCalculator[3] <= 0}" >
+                    {{formatPrice(profitCalculator[3])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[4] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      May
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[4] >= 0, 'text-red-400':profitCalculator[4] <= 0}" >
+                    {{formatPrice(profitCalculator[4])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[5] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      June
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[5] >= 0, 'text-red-400':profitCalculator[5] <= 0}" >
+                    {{formatPrice(profitCalculator[5])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[6] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      July
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[6] >= 0, 'text-red-400':profitCalculator[6] <= 0}" >
+                    {{formatPrice(profitCalculator[6])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[7] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      August
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[7] >= 0, 'text-red-400':profitCalculator[7] <= 0}" >
+                    {{formatPrice(profitCalculator[7])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[8] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      September
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[8] >= 0, 'text-red-400':profitCalculator[8] <= 0}" >
+                    {{formatPrice(profitCalculator[8])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[9] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      October
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[9] >= 0, 'text-red-400':profitCalculator[9] <= 0}" >
+                    {{formatPrice(profitCalculator[9])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[10] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      November
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[10] >= 0, 'text-red-400':profitCalculator[10] <= 0}" >
+                    {{formatPrice(profitCalculator[10])}}
+                </span>
+            </div>
+        </div>
+
+        <div class="flex items-center mb-6 rounded justify-between">
+            <span class="rounded-lg w-10 h-10">
+              <img v-if="profitCalculator[11] >= 0" src="https://www.nicepng.com/png/full/72-728597_money-logos-png-transparent-download-anti-facebook.png" alt="My Happy SVG"/>
+              <img v-else src = "https://www.pngkey.com/png/full/236-2369021_money-bag-icon-aarthi-scans-and-labs-logo.png" alt="My Happy SVG"/>
+            </span>
+            <div class="flex items-center w-full">
+                <div class="flex text-sm flex-col w-full ml-2">
+                    <p class="text-white">
+                      December
+                    </p>
+                </div>
+                <span class="w-full text-right" :class="{'text-green-400':profitCalculator[11] >= 0, 'text-red-400':profitCalculator[11] <= 0}" >
+                    {{formatPrice(profitCalculator[11])}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <!-- End PROFIT -->
 </div>
 </template>
 <script>
@@ -201,6 +412,11 @@ export default {
     notificationList(){
       return this.boarder_data?.filter(boarder => boarder?.payment_status !== null)
     },
+    profitCalculator() {
+      let profit = []
+      this.chartData?.datasets[0]?.data.map((v, i) => profit.push(v - this.chartData?.datasets[1]?.data[i]));
+      return profit
+    }
   },
   methods: {
     addBoarder(boarder) {
@@ -268,18 +484,25 @@ export default {
     },
     fetchExpense() {
       expense.cloud.chartExpense().then((expenses)=> {
-        console.log(expenses)
         expenses.forEach(expense => {
           this.chartData.datasets[1].data[expense.objectId-1] = expense.price
         });
       })
+    },
+    formatPrice(price) {
+      let formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'PHP',
+      });
+
+      return formatter.format(price);
     }
   },
 	mounted() {
     this.fetchVacantRoom()
     this.fetchIncome()
     this.fetchExpense()
-	}
+	},
 }
 </script>
 
