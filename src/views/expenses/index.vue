@@ -112,6 +112,8 @@ export default {
     showModal(modal,boarder={}) {
       if(modal === 'expense-modal') {
         this.form_expense.modal = true
+        this.form_expense.object = boarder
+        this.form_expense.type = 'add'
       } else if(modal === 'expense-modal-edit') {
         this.form_expense.modal = true
         this.form_expense.object = boarder
