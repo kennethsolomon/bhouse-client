@@ -73,7 +73,7 @@ import { expense } from '@/parse/expense'
         this.form_expense.id=this.object?.id,
         this.form_expense.name=this.object?.get('name'),
         this.form_expense.price=this.object?.get('price'),
-        this.form_expense.date=this.object?.get('date')
+        this.form_expense.date=this.object?.get('date').toISOString().split('T')[0]
       },
     },
     mounted() {
